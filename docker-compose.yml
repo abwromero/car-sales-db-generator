@@ -1,0 +1,55 @@
+version: "3.8"
+services:
+  faker-db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: faker
+      POSTGRES_PASSWORD: faker
+      POSTGRES_DB: faker
+    ports:
+      - "5430:5432"
+    volumes:
+      - faker-volume:/var/lib/postgresql/data
+    networks:
+      - faker-network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "faker"]
+      interval: 10s
+      retries: 3
+      start_period: 30s
+    restart: always
+  pgadmin:
+    image: dpage/pgadmin4:7.3
+    environment:
+      PGADMIN_DEFAULT_EMAIL: faker@faker.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5040:80"
+    networks:
+      - faker-network
+    healthcheck:
+      test: ["CMD", "ping localhost:80 || exit 1"]
+      interval: 10s
+      retries: 3
+      start_period: 180s
+    restart: always
+    depends_on:
+      - faker-db
+  jupyter-lab:
+    image: jupyter-faker:1.0.0
+    ports:
+      - "8888:8888"
+    networks:
+      - faker-network
+      - de-network
+    volumes:
+      - .:/projects
+    depends_on:
+      - faker-db
+volumes:
+  faker-volume:
+networks:
+  faker-network:
+    external: true
+  de-network:
+    external: true
