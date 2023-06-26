@@ -135,7 +135,7 @@ cursor = conn.cursor()
 
 # Assign a schema and table name for the database Faker values will be loaded to.
 SCHEMA_NAME = 'raw'
-TABLE_NAME = 'raw_tables'
+TABLE_NAME = 'raw_values'
 
 # Execute a query to create a schema, if it does not exist yet.
 cursor.execute(sql.SQL(
