@@ -11,6 +11,12 @@
 # Loading Data from Python to Postgres: https://hakibenita.com/fast-load-data-python-postgresql
 # 
 # Purpose of "seek" in loading data from Python to Postgres: https://stackoverflow.com/questions/55181331/bulk-insert-using-postgresql-copy-from-psycopg2-and-stringio
+# 
+# Use of copy_expert instead of copy_from:
+# https://github.com/psycopg/psycopg2/issues/1294
+# 
+# Postgres COPY syntax:
+# https://www.postgresql.org/docs/current/sql-copy.html
 
 # Import necessary Python packages
 
@@ -38,7 +44,6 @@ from io import StringIO
 with open('./reference-files/vehicle-models.csv') as file:
     read_file = reader(file)
     cars = list(read_file)
-
 
 # Extract the details of the vehicles along with the price. Load the extracted data in a list.
 cars_sum = []
@@ -133,41 +138,6 @@ conn = connect(
 # Connect to the database by creating a cursor from the connection.
 cursor = conn.cursor()
 
-# Assign a schema and table name for the database Faker values will be loaded to.
-SCHEMA_NAME = 'raw'
-TABLE_NAME = 'raw_values'
-
-# Execute a query to create a schema, if it does not exist yet.
-cursor.execute(sql.SQL(
-    "CREATE SCHEMA IF NOT EXISTS {};").format(sql.Identifier( SCHEMA_NAME )))
-
-# Modify the search path inside Postgres for the table to be created inside the designated schema.
-cursor.execute(sql.SQL(
-    "SET search_path to {};").format(sql.Identifier( SCHEMA_NAME )))
-
-# Execute a query inside the schema to create a table with the following data types.
-cursor.execute(sql.SQL(
-    """CREATE TABLE IF NOT EXISTS {} (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(25),
-    license CHAR(13),
-    num CHAR(15),
-    email VARCHAR(40),
-    company VARCHAR(80),
-    street VARCHAR(80),
-    city VARCHAR(40),
-    province VARCHAR(20),
-    date VARCHAR(27),
-    bank VARCHAR(40),
-    terms SMALLINT,
-    car VARCHAR(100),
-    color VARCHAR(8),
-    plate VARCHAR(7)
-    );""").format(sql.Identifier( TABLE_NAME )))
-
-# Commit the executed queries. This will create the necessary schema and table based from the SQL queries inside Postgres.
-conn.commit()
-
 # Create 5,000 rows of random data that will mimic car sales.
 target_values=5000
 
@@ -176,22 +146,6 @@ percentage_of_null_values=0.05
 
 # Create a list that will show the distribution of non-null and null values per column.
 weight_vs_null_values = [1-percentage_of_null_values,percentage_of_null_values]
-
-# Declare the names of the columns that will be loaded with values inside the database.
-table_cols = ['name',
-              'license',
-              'num',
-              'email',
-              'company',
-              'street',
-              'city',
-              'province',
-              'date',
-              'bank',
-              'terms',
-              'car',
-              'color',
-              'plate']
 
 # Create an instance of StringIO for the .csv file that will be loaded in the database.
 raw_data_csv_file = StringIO()
@@ -237,10 +191,26 @@ for row in range(target_values):
 raw_data_csv_file.seek(0)
 
 # Copy the generated data to the Postgres database.
-cursor.copy_from(file=raw_data_csv_file,
-                 table=TABLE_NAME,
-                 sep="|",
-                 columns=table_cols)
+cursor.copy_expert(sql="""
+                        COPY raw.raw_values(name,
+                                            license,
+                                            num,
+                                            email,
+                                            company,
+                                            street,
+                                            city,
+                                            province,
+                                            date,
+                                            bank,
+                                            terms,
+                                            car,
+                                            color,
+                                            plate)
+                        FROM STDIN
+                        WITH
+                        (FORMAT CSV,
+                        DELIMITER '|')
+                        """, file=raw_data_csv_file)
 
 # Commit the actions inside the database.
 conn.commit()

@@ -1,7 +1,9 @@
 version: "3.8"
 services:
   faker-db:
-    image: postgres:14
+    build:
+      context: docker-postgres
+      dockerfile: Dockerfile
     environment:
       POSTGRES_USER: faker
       POSTGRES_PASSWORD: faker
@@ -37,7 +39,9 @@ services:
     depends_on:
       - faker-db
   jupyter-lab:
-    build: .
+    build:
+      context: docker-jupyter
+      dockerfile: Dockerfile
     ports:
       - "8888:8888"
     networks:
