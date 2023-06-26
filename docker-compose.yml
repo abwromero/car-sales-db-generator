@@ -12,6 +12,7 @@ services:
       - faker-volume:/var/lib/postgresql/data
     networks:
       - faker-network
+      - de-network
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "faker"]
       interval: 10s
@@ -36,12 +37,11 @@ services:
     depends_on:
       - faker-db
   jupyter-lab:
-    image: jupyter-faker:1.0.0
+    build: .
     ports:
       - "8888:8888"
     networks:
       - faker-network
-      - de-network
     volumes:
       - .:/projects
     depends_on:

@@ -3,7 +3,7 @@
 
 # ### Fake Vehicle Sales Generator
 # This project intends to create random sales data for vehicles sold in the Philippines. The Faker package will be used to generate fake values. The fake values will be "adjusted" for the Philippine setting through the use of localized providers in Faker and the creation of lists representing vehicles and banking institutions in the country.
-#
+# 
 # Project References:
 # 
 # Faker documentation: https://faker.readthedocs.io/en/master/
@@ -12,8 +12,8 @@
 # 
 # Purpose of "seek" in loading data from Python to Postgres: https://stackoverflow.com/questions/55181331/bulk-insert-using-postgresql-copy-from-psycopg2-and-stringio
 
-
 # Import necessary Python packages
+
 # This package will be used to open the .csv file containing vehicle data.
 from csv import reader
 
@@ -35,9 +35,10 @@ from io import StringIO
 # Load the .csv file containing vehicle data that will be used to generate sales data.
 # Data source: https://www.carguide.ph/p/philippine-car-price-guide-2016_18.html
 # Data source extracted on 23 June 2023. Data was extracted and modified manually.
-with open('./csv-files/vehicle-models.csv') as file:
+with open('./reference-files/vehicle-models.csv') as file:
     read_file = reader(file)
     cars = list(read_file)
+
 
 # Extract the details of the vehicles along with the price. Load the extracted data in a list.
 cars_sum = []

@@ -4,6 +4,6 @@ WORKDIR /projects
 
 USER root
 
-RUN pip install selenium beautifulsoup4 faker pandas matplotlib scikit-learn psycopg2-binary
+RUN pip install faker psycopg2-binary
 
 USER $NB_UID
