@@ -4,8 +4,8 @@ SET search_path = raw;
 CREATE TABLE raw_values(
     id SERIAL PRIMARY KEY,
     name VARCHAR(50),
-    license CHAR(13),
-    num CHAR(15),
+    license VARCHAR(13),
+    num VARCHAR(15),
     email VARCHAR(40),
     company VARCHAR(80),
     street VARCHAR(80),
