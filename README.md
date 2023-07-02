@@ -75,6 +75,7 @@ VIII. Final Notes
 * If there are errors or areas this project can improve on, please let me know.
 
 XI. References
+
 Faker documentation: https://faker.readthedocs.io/en/master/
 
 Loading Data from Python to Postgres: https://hakibenita.com/fast-load-data-python-postgresql 
