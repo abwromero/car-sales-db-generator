@@ -1,6 +1,7 @@
 Mock Sales Database with Docker, Faker, JupyterLab, and Postgres
 
 I. Introduction
+
 This project intends to create a mock sales database with the use of Faker and Postgres. The fake data generated intends to represent total car sales in the Philippines for a given period. That said, selected columns for this database intends to mimic values similar or the same with ones from the Philippines. These are details such as vehicles, provinces, cities, street addresses, companies, banks, mobile numbers, etc. This makes the data generated as close to real values as possible.
 
 II. Pre-requisites
