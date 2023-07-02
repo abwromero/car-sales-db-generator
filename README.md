@@ -18,6 +18,7 @@ III. Installation
     * “docker-compose up”
 
 IV. Notes About Docker Volumes
+
 It can be seen from the Docker Compose file that there are volumes that are connected to folders from the host computer, while there are others that just have volume names. Here is a brief explanation of the two:
 * Named Volumes
     * These are volumes that are located inside Docker and cannot be accessed outside the Docker environment.
