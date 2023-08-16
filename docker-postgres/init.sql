@@ -2,7 +2,7 @@ CREATE SCHEMA raw;
 DROP SCHEMA public;
 SET search_path = raw;
 CREATE TABLE raw_values(
-    id SERIAL PRIMARY KEY,
+    id VARCHAR(36) PRIMARY KEY,
     name VARCHAR(50),
     license VARCHAR(13),
     num VARCHAR(15),
