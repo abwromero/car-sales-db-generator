@@ -4,6 +4,6 @@ WORKDIR /projects
 
 USER root
 
-RUN pip install faker psycopg2-binary
+RUN pip install faker psycopg2-binary pandas
 
 USER $NB_UID
