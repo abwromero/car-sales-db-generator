@@ -31,7 +31,7 @@ services:
     networks:
       - faker-network
     healthcheck:
-      test: ["CMD", "ping localhost:80 || exit 1"]
+      test: ["CMD", "wget", "-O", "-", "http://localhost:80/misc/ping"]
       interval: 10s
       retries: 3
       start_period: 180s
@@ -43,7 +43,7 @@ services:
       context: docker-jupyter
       dockerfile: Dockerfile
     ports:
-      - "8880:8888"
+      - "8888:8888"
     networks:
       - faker-network
     volumes:
