@@ -9,21 +9,19 @@ II. Pre-requisites
 * AWS Access Key and Secret Access Key
 
 III. Installation
-* Run the following command to create a volume for the Postgres database:
-    * “docker volume create faker-volume”
-* Run the following command to create a network for Postgres and JupyterLab:
-    * “docker network create faker-network”
-* Optional: In case you want to connect this as a mock source for another project in Docker, connect the Postgres database to another network. In my use case, this project serves as a mock source for another project of mine. The other network this project is connected to is called “de-network”. Please see the Docker Compose file for reference on how this was built.
 * Clone the Git repository for this project
 * Set the working directory inside the cloned folder
 * Run the following command:
-    * “docker-compose up”
+    * “docker compose up”
 
-IV. Implementation of AWS applications
+IV. Implementation of AWS applications with Terraform
 
-AWS applications need to be setup in order to send the data generated in the local Postgres Docker image to a mock RDS Postgres database in AWS. The main ETL application will extract the data from this external RDS database and load it inside the RDS database inside the application's VPC. This diagram summarizes the data transfer: local Postgres database -> mock RDS Postgres database outside the application's VPC -> internal RDS Postgres database in the application's VPC. IT IS ALSO IMPORTANT TO NOTE THAT THE IMPLEMENTATION OF THIS PROJECT IN AWS WILL INCUR COSTS. IF YOU PROCEED TO INITIALIZE THIS PROJECT IN AWS, ENSURE TO STOP AND REMOVE ALL RESOURCES.
+AWS applications need to be setup, specifically a mock RDS Postgres database in AWS. The main ETL application (write-up to be followed by this one) will extract the data from this external RDS database and load it inside the RDS database inside the application's VPC.
 
-* Here are the steps to setup your Terraform account:
+NOTE: IT IS ALSO IMPORTANT TO NOTE THAT THE IMPLEMENTATION OF THIS PROJECT IN AWS WILL INCUR COSTS. IF YOU PROCEED TO INITIALIZE THIS PROJECT IN AWS, ENSURE TO STOP AND REMOVE ALL RESOURCES AFTER.
+
+
+* To communicate the creation of resources in AWS, Terraform will be used to create the infrastructure. Here are the steps to setup your Terraform account:
     * Sign up for Terraform Cloud
     * Create your organization and workspace
     * Select your workspace and go to "General"
@@ -44,7 +42,7 @@ AWS applications need to be setup in order to send the data generated in the loc
     * Run this command after running the second Terraform command:
         * "terraform apply -auto-approve"
     * There should be a confirmation after that the AWS environment has been created.
-    * NOTE on the Usage of Terraform Cloud: The number of services initialized on AWS through Terraform Cloud should be within the free tier. Also, the use of Terraform Cloud protects any sensitive data since the backend and state are not stored locally. Storing these locally can expose your AWS credentials.
+    * NOTE on the Usage of Terraform Cloud: The number of services initialized on AWS through Terraform Cloud should be within the Terraform free tier, but there will still be costs from the side of AWS. Also, the use of Terraform Cloud protects any sensitive data since the backend and state are not stored locally. Storing these locally can expose your AWS credentials.
 
 V. Notes About Docker Volumes
 It can be seen from the Docker Compose file that there are volumes that are connected to folders from the host computer. Here is a brief explanation of bind mounts:
@@ -98,10 +96,8 @@ VII. Running the Python script and viewing the results
         * If the Python script was not modified, there should be 50,000 rows values generated with fake values.
 
 VIII. Shutting Down the Containers
-* If there are no applications that need to take the generated data in Postgres, you can turn off the containers with the following command:
-    * “docker-compose down”
-* If you want to delete the generated data inside Postgres while shutting down, you can run the following command:
-    * “docker-compose down -v”
+* If you want to shut down all of the containers in the Docker Compose file, you can run the following command:
+    * “docker compose down”
 
 XI. Stop and remove AWS infrastructure on Terraform
 * IMPORTANT: Stop all of the services on AWS to prevent any additional costs. To shutdown the AWS services started through Terraform, run the following command:
