@@ -1,26 +1,5 @@
 version: "3.8"
 services:
-  faker-db:
-    build:
-      context: docker-postgres
-      dockerfile: Dockerfile
-    environment:
-      POSTGRES_USER: faker
-      POSTGRES_PASSWORD: faker
-      POSTGRES_DB: faker
-    ports:
-      - "5300:5432"
-    volumes:
-      - faker-volume:/var/lib/postgresql/data
-    networks:
-      - faker-network
-      - dlt-network
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "faker"]
-      interval: 10s
-      retries: 3
-      start_period: 30s
-    restart: always
   pgadmin:
     image: dpage/pgadmin4:7.3
     environment:
@@ -28,32 +7,17 @@ services:
       PGADMIN_DEFAULT_PASSWORD: password
     ports:
       - "5030:80"
-    networks:
-      - faker-network
     healthcheck:
       test: ["CMD", "wget", "-O", "-", "http://localhost:80/misc/ping"]
       interval: 10s
       retries: 3
       start_period: 180s
     restart: always
-    depends_on:
-      - faker-db
   jupyter-lab:
     build:
       context: docker-jupyter
       dockerfile: Dockerfile
     ports:
       - "8888:8888"
-    networks:
-      - faker-network
     volumes:
       - .:/projects
-    depends_on:
-      - faker-db
-volumes:
-  faker-volume:
-networks:
-  faker-network:
-    external: true
-  dlt-network:
-    external: true

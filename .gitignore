@@ -1,1 +1,3 @@
 car-sales-data1.csv
+terraform/main/.terraform
+terraform/main/.terraform.lock.hcl
