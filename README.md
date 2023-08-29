@@ -87,6 +87,7 @@ VI. Access to the Applications
 VII. Running the Python script and viewing the results
 * Inside JupyterLab, do the following:
     * On the left side, click “faker_cars.ipynb”.
+    * On the sixth cell of "faker_cars.ipynb", input the database name, username, RDS endpoint, and password of the RDS Database and save the file.
     * Restart the kernel and run the entire script.
     * At this point, the results should have been sent to RDS
 * Go to the pgAdmin page:

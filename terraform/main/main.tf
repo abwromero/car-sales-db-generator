@@ -15,9 +15,9 @@ terraform {
     }
   }
   cloud {
-    organization = "abwromero"
+    organization = ""
     workspaces {
-      name = "dev-test-us-east"
+      name = ""
     }
   }
 }
